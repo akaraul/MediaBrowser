@@ -105,9 +105,6 @@ func floorcgf(x: CGFloat) -> CGFloat {
     /// MediaBrowser has belonged to viewcontroller
     public var hasBelongedToViewController = false
     
-    /// Check viewcontroller based status bar apperance
-    public var isVCBasedStatusBarAppearance = false
-    
     /// Hide or show status bar
     public var statusBarShouldBeHidden = false
     
@@ -282,15 +279,9 @@ func floorcgf(x: CGFloat) -> CGFloat {
     
     private func initialisation() {
         // Defaults
-        if let vcBasedStatusBarAppearance = Bundle.main.object(forInfoDictionaryKey: "UIViewControllerBasedStatusBarAppearance") as? Bool {
-           isVCBasedStatusBarAppearance = vcBasedStatusBarAppearance
-        } else {
-            isVCBasedStatusBarAppearance = true
-        }
-        
-        
         hidesBottomBarWhenPushed = true
-        automaticallyAdjustsScrollViewInsets = false
+//        pagingScrollView.contentInsetAdjustmentBehavior = .never
+//        automaticallyAdjustsScrollViewInsets = false
 //        extendedLayoutIncludesOpaqueBars = true
 //        navigationController?.view.backgroundColor = UIColor.white
         
@@ -375,6 +366,7 @@ func floorcgf(x: CGFloat) -> CGFloat {
         pagingScrollView.showsVerticalScrollIndicator = false
         pagingScrollView.backgroundColor = scrollViewBackgroundColor
         pagingScrollView.contentSize = contentSizeForPagingScrollView()
+        pagingScrollView.contentInsetAdjustmentBehavior = .never
         view.addSubview(pagingScrollView)
         
         // Toolbar
@@ -642,11 +634,11 @@ func floorcgf(x: CGFloat) -> CGFloat {
             storePreviousNavBarAppearance()
         }
         
-        // Set style
-        if !leaveStatusBarAlone && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-            previousStatusBarStyle = UIApplication.shared.statusBarStyle
-            UIApplication.shared.setStatusBarStyle(statusBarStyle, animated: animated)
-        }
+//        // Set style
+//        if !leaveStatusBarAlone && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+//            previousStatusBarStyle = UIApplication.shared.statusBarStyle
+//            UIApplication.shared.setStatusBarStyle(statusBarStyle, animated: animated)
+//        }
 
         setNavBarAppearance(animated: animated)
         
@@ -728,9 +720,9 @@ func floorcgf(x: CGFloat) -> CGFloat {
         setControlsHidden(hidden: false, animated: false, permanent: true)
         
         // Status bar
-        if !leaveStatusBarAlone && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
-            UIApplication.shared.setStatusBarStyle(previousStatusBarStyle, animated: animated)
-        }
+//        if !leaveStatusBarAlone && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+//            UIApplication.shared.setStatusBarStyle(previousStatusBarStyle, animated: animated)
+//        }
 
         // Super
         super.viewWillDisappear(animated)
@@ -1633,20 +1625,13 @@ func floorcgf(x: CGFloat) -> CGFloat {
         // Status bar
         if !leaveStatusBarAlone {
             // Hide status bar
-            if !isVCBasedStatusBarAppearance {
-                // falsen-view controller based
-                statusBarShouldBeHidden = hidden
-                UIApplication.shared.setStatusBarHidden(hidden, with: animated ? UIStatusBarAnimation.slide : UIStatusBarAnimation.none)
-                
-            } else {
-                // View controller based so animate away
-                statusBarShouldBeHidden = hidden
-                UIView.animate(
-                    withDuration: hidden ? 0.1 : animationDuration,
-                    animations: {
-                        self.setNeedsStatusBarAppearanceUpdate()
-                })
-            }
+            // View controller based so animate away
+            statusBarShouldBeHidden = hidden
+            UIView.animate(
+                withDuration: hidden ? 0.1 : animationDuration,
+                animations: {
+                    self.setNeedsStatusBarAppearanceUpdate()
+            })
         }
         
         // Navigation bar
