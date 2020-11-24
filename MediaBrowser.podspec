@@ -33,7 +33,7 @@ MediaBrowser can display one or more images or videos by providing either UIImag
 
   s.ios.deployment_target = '8.1'
 
-  s.frameworks = 'ImageIO', 'QuartzCore', 'AssetsLibrary', 'MediaPlayer'
+  s.frameworks = 'ImageIO', 'QuartzCore', 'MediaPlayer'
   s.weak_frameworks = 'Photos'
 
   s.dependency 'SDWebImage'
